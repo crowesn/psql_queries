@@ -1,0 +1,19 @@
+ SELECT
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL
+ 
+from sierra_view.bib_view i
+
+left join sierra_view.varfield t on (i.id = t.record_id and t.marc_tag = '245')
+left join sierra_view.varfield y on (i.id = y.record_id and y.marc_tag = '003')
+left join sierra_view.varfield u on (i.id = u.record_id and u.marc_tag = '856')
+left join sierra_view.varfield c on (i.id = c.record_id and c.marc_tag = '050')
+left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+ORDER BY c.field_content

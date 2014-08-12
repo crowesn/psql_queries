@@ -1,0 +1,17 @@
+﻿SELECT 
+count(DISTINCT i.id) as Bibs,
+count(DISTINCT o.field_content) as URLs
+--SUM(CASE WHEN (o.marc_tag = '856' AND o.field_content LIKE '%Off Campus Access%') THEN 1 ELSE 0 END) AS proxy
+
+FROM sierra_view.bib_view i
+
+JOIN sierra_view.varfield o ON (i.id = o.record_id AND (o.marc_tag = '956' OR o.marc_tag = '856'))
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id AND (y.marc_tag = '003' AND y.field_content != 'ER-YBP-DDA-disc' ))
+
+--JOIN sierra_view.varfield l ON (i.id = l.record_id AND l.marc_tag = '856')
+
+WHERE i.record_num <= '2546127' AND i.bcode3 != 's' AND i.bcode3 != 'd'-- AND y.field_content != 'ER-YBP-DDA-disc' 
+--LIMIT 100;
+
+
+--1571063

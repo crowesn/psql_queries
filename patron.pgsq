@@ -1,0 +1,12 @@
+SELECT v.field_content AS mnums
+
+FROM sierra_view.patron_record p
+JOIN sierra_view.varfield v ON (p.id = v.record_id and v.varfield_type_code = 's')
+
+WHERE p.expiration_date_gmt >= now()
+
+AND (p.ptype_code = '2'
+OR p.ptype_code = '0'
+OR p.ptype_code = '7')
+
+AND p.owed_amt >= '250'

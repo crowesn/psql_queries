@@ -1,0 +1,17 @@
+SELECT DISTINCT
+ concat('b',i.record_num,'a') as BibNumber, 
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ y.field_cONtent as Note
+
+from sierra_view.bib_view i
+
+JOIN sierra_view.bib_record_location bl ON (i.id = bl.bib_record_id)
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.varfield_type_code = 't')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '925')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.varfield_type_code = 'p')
+
+where lower(y.field_content) LIKE '%tech%' AND bl.location_code != 'btest'
+--and i.record_num = '5800361'
+
+order by Note

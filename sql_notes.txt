@@ -1,0 +1,397 @@
+﻿SELECT concat('b',i.record_num,'a') as BibNumber, 
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '') as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content from 'http.*$|(?=\|$)') as URL
+
+from sierra_view.bib_view i
+
+left join sierra_view.varfield t on (i.id = t.record_id and t.marc_tag = '245')
+left join sierra_view.varfield y on (i.id = y.record_id and y.marc_tag = '003')
+left join sierra_view.varfield u on (i.id = u.record_id and u.marc_tag = '856')
+left join sierra_view.varfield c on (i.id = c.record_id and c.marc_tag = '050')
+left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+where y.field_content LIKE '%ER-YBP%' and i.cataloging_date_gmt > current_timestamp - INTERVAL '1 month'
+--and i.record_num = '5800361'
+order by c.field_content
+
+
+
+
+
+
+
+
+
+
+SELECT concat('b',i.record_num,'a') as BibNumber, 
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '') as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content from 'http.*$|(?=\|$)') as URL
+ 
+from sierra_view.bib_record_order_record_link o
+left join sierra_view.order_view g on (o.order_record_id = g.id)
+join sierra_view.bib_view i on (o.bib_record_id = i.id)
+
+left join sierra_view.varfield t on (i.id = t.record_id and t.marc_tag = '245')
+left join sierra_view.varfield y on (i.id = y.record_id and y.marc_tag = '003')
+left join sierra_view.varfield u on (i.id = u.record_id and u.marc_tag = '856')
+left join sierra_view.varfield c on (i.id = c.record_id and c.marc_tag = '050')
+left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+where y.field_content LIKE '%ER-YBP%' and i.cataloging_date_gmt > current_timestamp - INTERVAL '1 month'
+--and i.record_num = '5800361'
+order by c.field_content
+
+LIMIT 100;
+
+
+
+
+
+26261
+
+SELECT * 
+from sierra_view.bib_record_order_record_link o
+left join sierra_view.order_view g on (o.order_record_id = g.id)
+join sierra_view.bib_view i on (o.bib_record_id = i.id)
+
+left join sierra_view.varfield t on (i.id = t.record_id and t.marc_tag = '245')
+--left join sierra_view.varfield y on (i.id = y.record_id and y.marc_tag = '003')
+left join sierra_view.varfield u on (i.id = u.record_id and u.marc_tag = '856')
+left join sierra_view.varfield c on (i.id = c.record_id and c.marc_tag = '050')
+left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+--where y.field_content LIKE '%ER-YBP%'-- and i.cataloging_date_gmt > current_timestamp - INTERVAL '1 month')
+order by c.field_content
+LIMIT 100;
+
+
+
+
+
+
+
+
+
+SELECT concat('b',i.record_num,'a') as BibNumber, 
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '') as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*$|(?=\|$)') as URL
+ 
+FROM sierra_view.bib_record_order_record_link o
+INNER JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+INNER JOIN sierra_view.bib_view i ON (o.bib_record_id = i.id)
+
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+--left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+WHERE y.field_content LIKE '%ER-YBP%' AND i.cataloging_date_gmt > current_timestamp - INTERVAL '1 month'
+--and i.record_num = '5800361'
+ORDER BY c.field_content
+
+--LIMIT 100;
+
+
+
+
+ SELECT
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL
+ 
+FROM sierra_view.bib_record_order_record_link o
+INNER JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+INNER JOIN sierra_view.bib_view i ON (o.bib_record_id = i.id)
+
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+--left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+--WHERE y.field_content LIKE '%ER-YBP%' AND date_part('month',i.cataloging_date_gmt) = 1
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+--and i.record_num = '5800361'
+ORDER BY c.field_content
+
+
+
+
+
+
+SELECT
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL
+
+FROM sierra_view.bib_view i
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+
+JOIN sierra_view.bib_record_order_record_link o ON (i.id = o.bib_record_id)
+JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+--left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+--WHERE y.field_content LIKE '%ER-YBP%' AND date_part('month',i.cataloging_date_gmt) = 1
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+--and i.record_num = '5800361'
+ORDER BY c.field_content
+
+ucfsb:~ crowesn$ PGPASSWORD=Sl3at3rK1nn3y psql -t -A -F $'\012' -R $'\012'$'\012' -U ucroweser -h sierra-db.libraries.uc.edu -p 1032 -d iii -f ~/eresources/pgsq/scripts/All_ebooks.psql | mail -s "Business ebooks report" sean.crowe@uc.edu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT --r.order_record_id,
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL
+
+FROM sierra_view.bib_view i
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+
+JOIN sierra_view.bib_record_order_record_link o ON (i.id = o.bib_record_id)
+JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+--JOIN sierra_view.order_record_received r ON g.id = r.order_record_id
+--left join sierra_view.varfield p on (i.id = p.record_id and p.varfield_type_code = 'p')
+
+--WHERE y.field_content LIKE '%ER-YBP%' AND date_part('month',i.cataloging_date_gmt) = 1
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+--and i.record_num = '5800361'
+ORDER BY c.field_content
+
+
+
+
+
+
+
+
+
+
+SELECT *
+
+FROM sierra_view.bib_view i
+
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+
+JOIN sierra_view.bib_record_order_record_link o ON (i.id = o.bib_record_id)
+JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+JOIN sierra_view.order_record_received r ON (g.id = r.order_record_id)
+
+--WHERE y.field_content LIKE '%ER-YBP%' AND date_part('month',i.cataloging_date_gmt) = 1
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+--WHERE i.id = '420912047250'
+ORDER BY c.field_content
+
+
+
+
+
+
+SELECT DISTINCT
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL
+
+FROM sierra_view.bib_view i
+
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+
+JOIN sierra_view.bib_record_order_record_link o ON (i.id = o.bib_record_id)
+JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+LEFT JOIN sierra_view.order_record_cmf r ON (g.id = r.order_record_id)
+LEFT OUTER JOIN sierra_view.fund_master a ON (CAST(r.fund_code AS integer) = a.code_num)
+
+--WHERE y.field_content LIKE '%ER-YBP%' AND date_part('month',i.cataloging_date_gmt) = 1
+WHERE y.field_content LIKE '%ER-YBP%' 
+AND a.code LIKE '%daap%'
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+--WHERE i.id = '420912047250'
+ORDER BY Call_No
+
+
+
+
+
+
+
+
+create temporary table OCLC(id text);
+\copy OCLC from '~/eresources/pgsq/scripts/MvI-June-13-Full776.txt'
+\copy (select concat('b',b.record_num,'a') as bibno from OCLC o JOIN sierra_view.varfield v ON (o.id = v.field_content and v.varfield_type_code = 'o') LEFT JOIN sierra_view.bib_view b ON (v.record_id = b.id)) TO dump.csv WITH CSV HEADER;
+
+
+query_file.write("create temporary table OCLC(id text);\n\\copy OCLC from \'#{oclc_file.path}\'\n\\copy (select concat(\'b\',b.record_num,\'a\') as bibno from OCLC o JOIN sierra_view.varfield v ON (o.id = v.field_content and v.varfield_type_code = \'o\') LEFT JOIN sierra_view.bib_view b ON (v.record_id = b.id)) TO STDOUT WITH CSV HEADER;")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT count(DISTINCT i.id) as Bibs, count(o.marc_tag) as URLs,
+SUM(CASE WHEN (o.marc_tag = '856' AND o.field_content LIKE '%Off Campus Access%') THEN 1 ELSE 0 END) AS proxy
+
+FROM sierra_view.bib_view i
+
+JOIN sierra_view.varfield o ON (i.id = o.record_id AND (o.marc_tag = '956' OR o.marc_tag = '856'))
+
+--JOIN sierra_view.varfield l ON (i.id = l.record_id AND l.marc_tag = '856')
+
+
+
+
+
+
+
+
+--003_count.csv
+
+SELECT y.field_content
+FROM sierra_view.bib_view i
+
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856' OR u.marc_tag = '956')
+
+WHERE y.field_content LIKE 'ER-%'
+AND i.bcode3 != 'd'
+AND i.bcode3 != 's'
+AND i.cataloging_date_gmt <= '2013-06-30'
+
+GROUP BY y.field_content
+
+LIMIT 100;
+
+
+
+
+
+
+
+
+
+--003_count.csv
+
+SELECT *--u.marc_tag, u.field_content
+FROM sierra_view.subfield_view i
+
+--LEFT JOIN sierra_view.bib_view y ON (i.record_id = y.id)
+--LEFT JOIN sierra_view.subfield_view u ON (i.id = u.record_id)
+
+--WHERE y.field_content LIKE 'ER-%'
+--WHERE i.bcode3 != 'd'
+--AND i.bcode3 != 's'
+--AND i.cataloging_date_gmt <= '2013-06-30'
+
+WHERE i.tag = 'u' AND (i.marc_tag = '856' OR i.marc_tag = '956')
+
+
+--LIMIT 100;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--003_count.csv
+
+SELECT *--u.field_content
+FROM sierra_view.bib_view i
+
+
+LEFT JOIN sierra_view.control_field y006 ON (i.id = y006.id AND y006.marc_tag = '006')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id AND (u.marc_tag = '856' OR u.marc_tag = '956'))
+LEFT JOIN sierra_view.varfield y003 ON (i.id = y003.record_id and y003.marc_tag = '003')
+
+WHERE 
+
+i.bcode3 != 'd'
+AND i.bcode3 != 's'
+AND i.cataloging_date_gmt <= '2013-06-30'
+
+AND (i.bcode2 = 'a' 
+OR i.bcode2 = 't'
+OR (i.bcode2 = 'm' AND y006.field_content LIKE 'a%'))
+
+
+
+
+
+
+
+LIMIT 100;

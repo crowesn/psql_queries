@@ -1,0 +1,9 @@
+SELECT * 
+FROM
+sierra_view.item_view i
+WHERE
+
+i.item_status_code = 'p'
+AND extract(month from i.record_creation_date_gmt) < extract(month from (now() - interval '6 months'))
+AND extract(year from i.record_creation_date_gmt) < extract(year from (now() - interval '6 months'))
+--LIMIT 100;

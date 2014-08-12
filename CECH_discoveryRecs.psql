@@ -1,0 +1,29 @@
+--CECH DDA discovery records
+
+SELECT DISTINCT
+ substring(u.field_content FROM 'http.*?(?=\||$)') as URL,
+ concat('Call No: ',regexp_replace(regexp_replace(c.field_content, '\|[ab]', '', 'g'), '^\s', '')) as Call_No,
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher
+
+
+FROM sierra_view.bib_view i
+
+LEFT JOIN sierra_view.varfield t ON (i.id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield c ON (i.id = c.record_id and c.marc_tag = '050')
+LEFT JOIN sierra_view.varfield p ON (i.id = p.record_id and p.marc_tag = '260')
+
+--JOIN sierra_view.bib_record_order_record_link o ON (i.id = o.bib_record_id)
+--JOIN sierra_view.order_view g ON (o.order_record_id = g.id)
+--LEFT JOIN sierra_view.order_record_cmf r ON (g.id = r.order_record_id)
+--LEFT OUTER JOIN sierra_view.fund_master a ON (CAST(r.fund_code AS integer) = a.code_num)
+
+WHERE y.field_content LIKE '%ER-YBP-DDA-disc%' 
+
+
+AND extract(month from i.cataloging_date_gmt) = extract(month from (now() - interval '1 month'))
+AND extract(year from i.cataloging_date_gmt) = extract(year from (now() - interval '1 month')) 
+
+ORDER BY Call_No

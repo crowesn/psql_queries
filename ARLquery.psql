@@ -1,0 +1,14 @@
+﻿SELECT y.field_content, count(y.field_content)
+FROM sierra_view.bib_view i
+
+LEFT JOIN sierra_view.varfield y ON (i.id = y.record_id and y.marc_tag = '003')
+--LEFT JOIN sierra_view.varfield u ON (i.id = u.record_id and u.marc_tag = '730')
+
+WHERE y.field_content LIKE 'ER-%'
+AND i.bcode3 != 'd'
+AND i.bcode3 != 's'
+AND i.cataloging_date_gmt <= '2013-06-30'
+
+GROUP BY y.field_content
+
+--LIMIT 100;

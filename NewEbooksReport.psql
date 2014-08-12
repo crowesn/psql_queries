@@ -1,0 +1,27 @@
+SELECT
+ j.field_content AS NotifyNote,
+ concat('b',b.record_num,'a') as BibNumber, 
+ regexp_replace(regexp_replace(t.field_content, '\|[abchnp]', ' ', 'g'), '^\s', '') as Title,
+ regexp_replace(regexp_replace(p.field_content, '\|[abc]', ' ', 'g'), '^\s', '') as Publisher,
+ substring(u.field_content from 'http.*$|(?=\|$)') as URL
+
+FROM sierra_view.order_view o
+
+JOIN sierra_view.varfield j ON (o.id = j.record_id)
+
+JOIN sierra_view.bib_record_order_record_link l ON (o.record_id = l.order_record_id)
+JOIN sierra_view.bib_view b ON (l.bib_record_id = b.id)
+LEFT JOIN sierra_view.varfield a ON (l.bib_record_id = a.record_id and a.marc_tag = '100')
+LEFT JOIN sierra_view.varfield t ON (l.bib_record_id = t.record_id and t.marc_tag = '245')
+LEFT JOIN sierra_view.varfield p ON (l.bib_record_id = p.record_id and p.marc_tag SIMILAR TO '26(0|4)')
+LEFT JOIN sierra_view.varfield u ON (l.bib_record_id = u.record_id and u.marc_tag = '856')
+LEFT JOIN sierra_view.varfield y ON (l.bib_record_id = y.record_id and y.marc_tag = '003')
+
+WHERE j.varfield_type_code SIMILAR TO '%(j|z|v|m|n)%' and lower(j.field_content) LIKE '%notify%'
+AND lower(y.field_content) LIKE '%er-ybp%'
+
+AND extract(day from b.cataloging_date_gmt) = extract(day from (now() - interval '1 day'))
+AND extract(month from b.cataloging_date_gmt) = extract(month from (now() - interval '1 day'))
+AND extract(year from b.cataloging_date_gmt) = extract(year from (now() - interval '1 day')) 
+
+LIMIT 100;
